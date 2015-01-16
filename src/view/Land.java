@@ -20,15 +20,15 @@ public class Land extends JPanel implements Observer {
 	
 	public Land(model.SpaceField sp) {
 		this.spField = sp;
-		this.spField.addObserver(this);
 		image = new BufferedImage(spField.getDimX(), spField.getDimY(), BufferedImage.TYPE_INT_ARGB);
 			
 		this.setPreferredSize(new Dimension(image.getWidth(this), image.getHeight(this)));
-		
+
+		this.spField.addObserver(this);
 	}
 	 
 	public void paintComponent(Graphics g) {
-		  // Appel de la méthode paintComponent de la classe mère
+		  // Appel de la mï¿½thode paintComponent de la classe mï¿½re
 		  super.paintComponent(g);
 		  // Conversion en un contexte 2D
 		  Graphics2D g2 = (Graphics2D) g;
