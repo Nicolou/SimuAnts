@@ -1,9 +1,15 @@
 package model;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
-import java.util.Observable;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
-public class Ant extends Observable {
+import javax.imageio.ImageIO;
+
+public class Ant extends AbstractInsect {
 	
 	
 	private float posx;
@@ -13,7 +19,9 @@ public class Ant extends Observable {
 	private int azimuthDegrees;
 	private SpaceField spaceField;
 	private String name;
-
+	private Image img;
+	
+	
 	public Ant(SpaceField sp) {
 		foods=5;
 		age = 1;
@@ -21,8 +29,20 @@ public class Ant extends Observable {
 		if (sp != null )  this.spaceField = sp;
 		else this.spaceField = new SpaceField();
 		
-		this.spaceField.addAnt(this);
+		this.spaceField.addInsect(this);
 		this.azimuthDegrees = 30;
+		
+		try {
+			this.img = ImageIO.read(getClass().getClassLoader().getResource("resources/images/fourmis1.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			img = new BufferedImage(4, 4, BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g2 = ((BufferedImage) img).createGraphics();
+			g2.setColor(Color.BLUE);
+			g2.fillRect(4, 4, 1, 1);
+			g2.dispose();
+		}
 		
 	}
 	
@@ -71,6 +91,10 @@ public class Ant extends Observable {
 			this.setChanged();
 			this.notifyObservers();
 		}
+	}
+	@Override
+	public Image getImage() {
+		return img;
 	}
 
 
@@ -175,6 +199,7 @@ public class Ant extends Observable {
 		
 		
 	}
+
 	
 	
 	

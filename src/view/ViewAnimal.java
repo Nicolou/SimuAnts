@@ -16,7 +16,7 @@ public class ViewAnimal {
 		
 	}
 	
-	public void setImgRestore( Land land) {
+	public void setImgRestore( ViewerLand land) {
 		
 	}
 	

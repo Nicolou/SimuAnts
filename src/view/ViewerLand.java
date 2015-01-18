@@ -11,14 +11,15 @@ import java.util.Observer;
 
 import javax.swing.JPanel;
 
+import model.AbstractInsect;
 import model.Ant;
 
-public class Land extends JPanel implements Observer {
+public class ViewerLand extends JPanel implements Observer {
 	private static final long serialVersionUID = 1L;
 	private Image image;
 	private model.SpaceField spField;
 	
-	public Land(model.SpaceField sp) {
+	public ViewerLand(model.SpaceField sp) {
 		this.spField = sp;
 		image = new BufferedImage(spField.getDimX(), spField.getDimY(), BufferedImage.TYPE_INT_ARGB);
 			
@@ -40,12 +41,12 @@ public class Land extends JPanel implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		Ant a = null;
-		a = (Ant) arg;
+		AbstractInsect a = null;
+		if ( arg instanceof AbstractInsect) a = (AbstractInsect) arg;
 		if ( a != null) {
 			Graphics2D g2 = ((BufferedImage) image).createGraphics();
-			g2.setColor(Color.BLUE);
-			g2.fillRect(a.getPosx(), a.getPosy(), 1, 1);
+			//g2.clearRect(0, 0, image.getWidth(null), image.getHeight(null));
+			g2.drawImage(a.getImage(), a.getPosx()-a.getImage().getWidth(null)/2, a.getPosy()-a.getImage().getHeight(null)/2, null);
 			g2.dispose();
 			
 			this.repaint();

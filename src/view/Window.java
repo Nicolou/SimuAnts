@@ -11,7 +11,7 @@ public class Window extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Land land;
+	private ViewerLand land;
 	
 	public Window() throws HeadlessException {
 		
@@ -23,7 +23,7 @@ public class Window extends JFrame {
 	}
 	
 	public void setLand( model.SpaceField sp) {
-		this.land = new Land(sp);
+		this.land = new ViewerLand(sp);
 		this.getContentPane().add(land, BorderLayout.CENTER);
 		this.pack();
 	}

@@ -1,6 +1,8 @@
 package model;
 
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -8,12 +10,13 @@ import java.util.Observer;
 public class SpaceField extends Observable implements Observer {
 	private int dimX;
 	private int dimY;
-	private ArrayList<Ant> listOfAnt;
+	private ArrayList<AbstractInsect> listOfInsect;
+	private Image image;
 
 	public SpaceField() {
-		this.listOfAnt = new ArrayList<Ant>();
+		this.listOfInsect = new ArrayList<AbstractInsect>();
 		dimX = dimY = 500;
-		
+		image = new BufferedImage(dimX, dimY, BufferedImage.TYPE_INT_ARGB);
 	}
 	
 	public int getDimX() {
@@ -28,16 +31,24 @@ public class SpaceField extends Observable implements Observer {
 	public void setDimY(int dimY) {
 		this.dimY = dimY;
 	}
-	public void addAnt(Ant a) {
-		if (! this.listOfAnt.contains(a)) {
+	public void addInsect(AbstractInsect a) {
+		if (! this.listOfInsect.contains(a)) {
 			a.addObserver(this);
-			this.listOfAnt.add(a);
+			//this.listOfInsect.add(a);
 		}
+	}
+
+	public Image getImage() {
+		return image;
+	}
+
+	public void setImage(Image image) {
+		this.image = image;
 	}
 	
 	public Object  getObject(Point p) {
 		
-		for (Ant b : listOfAnt) {
+		for (AbstractInsect b : listOfInsect) {
 			if (b.getPosition().equals(p)) {
 				return b;
 			}
@@ -48,8 +59,8 @@ public class SpaceField extends Observable implements Observer {
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		Ant a = null;
-		a = (Ant) arg0;
+		AbstractInsect a = null;
+		if ( arg0 instanceof AbstractInsect ) a = (AbstractInsect) arg0;
 		if ( a != null) {
 			this.setChanged();
 			this.notifyObservers(a);

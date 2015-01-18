@@ -1,9 +1,16 @@
 package model;
 
-import java.util.Observable;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
-public class OldAnt extends Observable {
+import javax.imageio.ImageIO;
+
+public class OldAnt extends AbstractInsect {
 
 	static enum ORI {
 		NORTH,
@@ -18,6 +25,7 @@ public class OldAnt extends Observable {
 	private ORI orientation;
 	private SpaceField spaceField;
 	private String name;
+	private Image img;
 
 	public OldAnt(SpaceField sp) {
 		foods=5;
@@ -25,6 +33,26 @@ public class OldAnt extends Observable {
 		orientation = ORI.EAST;
 		if (sp != null ) this.spaceField = sp;
 		else this.spaceField = new SpaceField();
+		this.spaceField.addInsect(this);
+		
+		try {
+			this.img = ImageIO.read(getClass().getClassLoader().getResource("resources/images/fourmis2.png"));
+			//debug
+			img = new BufferedImage(4, 4, BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g2 = ((BufferedImage) img).createGraphics();
+			g2.setColor(Color.RED);
+			g2.fillRect(1, 1, 4, 4);
+			g2.dispose();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			img = new BufferedImage(4, 4, BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g2 = ((BufferedImage) img).createGraphics();
+			g2.setColor(Color.RED);
+			g2.fillRect(4, 4, 1, 1);
+			g2.dispose();
+		}
+		
 
 	}
 	public String getName() {
@@ -64,43 +92,80 @@ public class OldAnt extends Observable {
 			this.notifyObservers();
 		}
 	}
+	
+
+	@Override
+	public Image getImage() {
+		return img;
+	}
+	
 	public void turnLeft(){
+		
+		int angle=0;
+		
 		switch (orientation) {
 		case EAST:
 			this.orientation = ORI.NORTH;
+			angle = 0;
 			break;
 		case NORTH:
 			this.orientation = ORI.WEST;
+			angle = -90;
 			break;
 		case SOUTH:
 			this.orientation = ORI.EAST;
+			angle = 90;
 			break;
 		case WEST:
 			this.orientation = ORI.SOUTH;
+			angle = 180;
 			break;
 		default:
 			break;
 		}
+		
+		//rotate img
+		AffineTransform at = new AffineTransform();
+		at.rotate(Math.toRadians(angle));
+		Graphics2D g2 = ((BufferedImage) img).createGraphics();
+		g2.transform(at);
+		g2.drawImage(img, at, null);
+		g2.dispose();		
+		
 		this.setChanged();
 		this.notifyObservers();
 	}
+	
 	public void turnRight(){
+		int angle=0;
 		switch (orientation) {
 		case EAST:
 			this.orientation = ORI.SOUTH;
+			angle = 180;
 			break;
 		case NORTH:
 			this.orientation = ORI.EAST;
+			angle = 90;
 			break;
 		case SOUTH:
 			this.orientation = ORI.WEST;
+			angle = -90;
 			break;
 		case WEST:
 			this.orientation = ORI.NORTH;
+			angle = 0;
 			break;
 		default:
 			break;
 		}
+		//rotate img
+		AffineTransform at = new AffineTransform();
+		at.rotate(Math.toRadians(angle));
+		Graphics2D g2 = ((BufferedImage) img).createGraphics();
+		g2.transform(at);
+		g2.drawImage(img, at, null);
+		g2.dispose();
+		
 		this.setChanged();
 		this.notifyObservers();
 	}
