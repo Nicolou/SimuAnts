@@ -34,8 +34,12 @@ public class SpaceField extends Observable implements Observer {
 	public void addInsect(AbstractInsect a) {
 		if (! this.listOfInsect.contains(a)) {
 			a.addObserver(this);
-			//this.listOfInsect.add(a);
+			this.listOfInsect.add(a);
 		}
+	}
+	
+	public ArrayList<AbstractInsect> getList() {
+		return this.listOfInsect;
 	}
 
 	public Image getImage() {
