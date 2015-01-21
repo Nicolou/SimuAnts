@@ -177,6 +177,9 @@ public class OldAnt extends AbstractInsect {
 				this.posx += 1;
 				this.setChanged();
 				this.notifyObservers();
+			}else{ //go back to the screen
+				this.posx -= 1;
+				this.orientation = ORI.WEST;
 			}
 			break;
 		case NORTH:
@@ -184,6 +187,9 @@ public class OldAnt extends AbstractInsect {
 				this.posy -= 1;
 				this.setChanged();
 				this.notifyObservers();
+			}else{ //go back to the screen
+				this.posy += 1;
+				this.orientation = ORI.SOUTH;
 			}
 			break;
 		case SOUTH:
@@ -191,6 +197,9 @@ public class OldAnt extends AbstractInsect {
 				this.posy += 1;
 				this.setChanged();
 				this.notifyObservers();
+			}else{ //go back to the screen
+				this.posy -= 1;
+				this.orientation = ORI.NORTH;
 			}
 			break;
 		case WEST:
@@ -198,6 +207,9 @@ public class OldAnt extends AbstractInsect {
 				this.posx -= 1;
 				this.setChanged();
 				this.notifyObservers();
+			}else{ //go back to the screen
+				this.posx += 1;
+				this.orientation = ORI.EAST;
 			}
 			break;
 		default:
@@ -208,11 +220,11 @@ public class OldAnt extends AbstractInsect {
 		//random behavior
 		Thread t = new Thread() {
 			public void run() {
-				int tpsMini = 10;
-				int tpsMaxi = 500;
+				int tpsMini = 50;
+				int tpsMaxi = 120;
 				int nbt=0, nbdir=0, tps=0, dir = 0;
 				int nbDirMini = 3;
-				int nbDirMaxi = 10;
+				int nbDirMaxi = 15;
 				while (true) {
 					if (nbt < 0) {
 						tps = (int) (tpsMini + (tpsMaxi-tpsMini) *Math.random());

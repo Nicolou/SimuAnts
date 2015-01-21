@@ -128,30 +128,40 @@ public class Ant extends AbstractInsect {
 	private void goHead(){
 		double x, y;
 		x = Math.sin(Math.toRadians(azimuthDegrees));
-		y = Math.cos(Math.toRadians(azimuthDegrees)); 
+		y = -1 * Math.cos(Math.toRadians(azimuthDegrees)); 
 
-		if ( this.posx + x < 0) {
-			this.posx -= x;
-			//change azimuth
-			this.azimuthDegrees =  -1* this.azimuthDegrees;						
-		}else if (this.posx + x > spaceField.getDimX()) {
-			this.posx -= x;			
-			this.azimuthDegrees =  -1* this.azimuthDegrees;					
-		}else {
+		if ( this.posx + x < 0) { // left spaceField edge
+			this.posx += 1;
+			if ( ( 180 < this.azimuthDegrees && this.azimuthDegrees < 360 ) || ( 0 < this.azimuthDegrees && this.azimuthDegrees < -180  )) {
+				this.azimuthDegrees =  -1* this.azimuthDegrees;	//go back	
+			}
+			this.rotateImg();				
+		}else if (this.posx + x > spaceField.getDimX()) { //right spaceField edge
+			this.posx -= 1;			
+			if ( ( 0 < this.azimuthDegrees && this.azimuthDegrees < 180 ) || ( -360 < this.azimuthDegrees && this.azimuthDegrees < -180  )) {
+				this.azimuthDegrees =  -1* this.azimuthDegrees;	//go back
+			}
+			this.rotateImg();			
+		}else { //normal behavior
 			this.posx += x;
 		}
 		
-		if ( this.posy - y < 0) {
+		if ( this.posy + y < 0) { //top edge
+			this.posy += 1;
+			if ( ( -90 < this.azimuthDegrees && this.azimuthDegrees < 90 ) || ( 270 < this.azimuthDegrees )) {
+				this.azimuthDegrees = (180 - this.azimuthDegrees) % 360;
+			}
+			this.rotateImg();				
+		}else if (this.posy + y > spaceField.getDimY()) { // bottom spaceField edge
+			this.posy -= 1;			
+			if ( ( 90 < this.azimuthDegrees && this.azimuthDegrees < 270 ) || ( -270 < this.azimuthDegrees && this.azimuthDegrees < -90 )) {
+				this.azimuthDegrees = (180 - this.azimuthDegrees) % 360;
+			}
+			this.rotateImg();						
+		}else{ // normal behavior
 			this.posy += y;
-			//change azimuth
-			this.azimuthDegrees = (180 - this.azimuthDegrees) % 360;					
-		}else if (this.posy - y > spaceField.getDimY()) {
-			this.posy += y;			
-			this.azimuthDegrees = (180 - this.azimuthDegrees) % 360;						
-		}else{
-			this.posy -= y;
 		}
-				
+		
 		//System.out.println(" x = " + this.getPosx() + ",  y=" + this.getPosy() + ", azimuth = " + this.azimuthDegrees);
 		
 		this.setChanged();

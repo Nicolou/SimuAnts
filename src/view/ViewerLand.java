@@ -24,7 +24,7 @@ public class ViewerLand extends JPanel implements ComponentListener {
 			
 		this.setPreferredSize(new Dimension(image.getWidth(this), image.getHeight(this)));
 		this.timer = new Timer();
-		this.timer.schedule(new SchedduledPaintImage(), 250, 100); //display image 10/seconds and begin after 250 millisecond
+		this.timer.schedule(new SchedduledPaintImage(), 50, 100); //display image 20/seconds and begin after 250 millisecond
 		
 		this.addComponentListener(this);
 	}
