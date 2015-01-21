@@ -5,18 +5,14 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import javax.swing.JPanel;
 
-import model.AbstractInsect;
-import model.Ant;
-
-public class ViewerLand extends JPanel implements Observer {
+public class ViewerLand extends JPanel implements ComponentListener {
 	private static final long serialVersionUID = 1L;
 	private Image image;
 	private model.SpaceField spField;
@@ -27,10 +23,10 @@ public class ViewerLand extends JPanel implements Observer {
 		image = new BufferedImage(spField.getDimX(), spField.getDimY(), BufferedImage.TYPE_INT_ARGB);
 			
 		this.setPreferredSize(new Dimension(image.getWidth(this), image.getHeight(this)));
-		this.spField.addObserver(this);
 		this.timer = new Timer();
 		this.timer.schedule(new SchedduledPaintImage(), 250, 100); //display image 10/seconds and begin after 250 millisecond
 		
+		this.addComponentListener(this);
 	}
 	 
 	public void paintComponent(Graphics g) {
@@ -43,17 +39,7 @@ public class ViewerLand extends JPanel implements Observer {
 		  g2.dispose();
 	}
 
-	@Override
-	public void update(Observable o, Object arg) {
-		AbstractInsect a = null;
-		if ( arg instanceof AbstractInsect) a = (AbstractInsect) arg;
-		if ( a != null) {
-//			Graphics2D g2 = ((BufferedImage) image).createGraphics();
-//			//g2.clearRect(0, 0, image.getWidth(null), image.getHeight(null));
-//			g2.drawImage(a.getImage(), a.getPosx()-a.getImage().getWidth(null)/2, a.getPosy()-a.getImage().getHeight(null)/2, null);
-//			
-		}
-	}
+
 	
 	private class SchedduledPaintImage extends TimerTask {
 
@@ -70,6 +56,36 @@ public class ViewerLand extends JPanel implements Observer {
 			repaint();
 			
 		}
+		
+	}
+
+
+
+	@Override
+	public void componentHidden(ComponentEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentResized(ComponentEvent arg0) {
+
+		this.spField.setDimX(this.getWidth());
+		this.spField.setDimY(this.getHeight());
+		image = new BufferedImage(spField.getDimX(), spField.getDimY(), BufferedImage.TYPE_INT_ARGB);			
+		//this.setPreferredSize(new Dimension(image.getWidth(this), image.getHeight(this)));
+		
+	}
+
+	@Override
+	public void componentShown(ComponentEvent arg0) {
+		// TODO Auto-generated method stub
 		
 	}
 
