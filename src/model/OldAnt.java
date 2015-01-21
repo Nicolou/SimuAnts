@@ -26,6 +26,7 @@ public class OldAnt extends AbstractInsect {
 	private SpaceField spaceField;
 	private String name;
 	private Image img;
+	private Image imgOri;
 
 	public OldAnt(SpaceField sp) {
 		foods=5;
@@ -36,21 +37,18 @@ public class OldAnt extends AbstractInsect {
 		this.spaceField.addInsect(this);
 		
 		try {
+			this.imgOri = ImageIO.read(getClass().getClassLoader().getResource("resources/images/fourmis2.png"));
 			this.img = ImageIO.read(getClass().getClassLoader().getResource("resources/images/fourmis2.png"));
-			//debug
-			img = new BufferedImage(4, 4, BufferedImage.TYPE_INT_ARGB);
-			Graphics2D g2 = ((BufferedImage) img).createGraphics();
-			g2.setColor(Color.RED);
-			g2.fillRect(1, 1, 4, 4);
-			g2.dispose();
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			img = new BufferedImage(4, 4, BufferedImage.TYPE_INT_ARGB);
+			imgOri = new BufferedImage(4, 4, BufferedImage.TYPE_INT_ARGB);
 			Graphics2D g2 = ((BufferedImage) img).createGraphics();
 			g2.setColor(Color.RED);
 			g2.fillRect(4, 4, 1, 1);
 			g2.dispose();
+			this.img = new BufferedImage(this.imgOri.getWidth(null), this.imgOri.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 		}
 		
 
@@ -99,7 +97,22 @@ public class OldAnt extends AbstractInsect {
 		return img;
 	}
 	
-	public void turnLeft(){
+	private void rotateImg(int angle) {
+		
+		Graphics2D g2 = ((BufferedImage) img).createGraphics();
+		//clear the surface
+		g2.setBackground(new Color (1,1,1,1)); //transparency backColor
+		g2.clearRect(0, 0, img.getWidth(null), img.getHeight(null));
+		//do the rotation
+		AffineTransform tx = new AffineTransform();
+		tx.rotate(Math.toRadians(angle)/2,this.imgOri.getWidth(null)/2, this.imgOri.getHeight(null)/2 );
+	    g2.setTransform(tx);
+	    g2.drawImage(imgOri, tx, null);
+		
+		g2.dispose();		
+	}
+	
+	private void turnLeft(){
 		
 		int angle=0;
 		
@@ -123,20 +136,13 @@ public class OldAnt extends AbstractInsect {
 		default:
 			break;
 		}
-		
-		//rotate img
-		AffineTransform at = new AffineTransform();
-		at.rotate(Math.toRadians(angle));
-		Graphics2D g2 = ((BufferedImage) img).createGraphics();
-		g2.transform(at);
-		g2.drawImage(img, at, null);
-		g2.dispose();		
+		this.rotateImg(angle);
 		
 		this.setChanged();
 		this.notifyObservers();
 	}
 	
-	public void turnRight(){
+	private void turnRight(){
 		int angle=0;
 		switch (orientation) {
 		case EAST:
@@ -159,17 +165,12 @@ public class OldAnt extends AbstractInsect {
 			break;
 		}
 		//rotate img
-		AffineTransform at = new AffineTransform();
-		at.rotate(Math.toRadians(angle));
-		Graphics2D g2 = ((BufferedImage) img).createGraphics();
-		g2.transform(at);
-		g2.drawImage(img, at, null);
-		g2.dispose();
+		this.rotateImg(angle);
 		
 		this.setChanged();
 		this.notifyObservers();
 	}
-	public void goHead(){
+	private void goHead(){
 		switch (orientation) {
 		case EAST:
 			if (this.posx < this.spaceField.getDimX()) {

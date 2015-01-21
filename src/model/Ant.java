@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -20,6 +21,7 @@ public class Ant extends AbstractInsect {
 	private SpaceField spaceField;
 	private String name;
 	private Image img;
+	private Image imgOri;
 	
 	
 	public Ant(SpaceField sp) {
@@ -34,14 +36,16 @@ public class Ant extends AbstractInsect {
 		
 		try {
 			this.img = ImageIO.read(getClass().getClassLoader().getResource("resources/images/fourmis1.png"));
+			this.imgOri = ImageIO.read(getClass().getClassLoader().getResource("resources/images/fourmis1.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			img = new BufferedImage(4, 4, BufferedImage.TYPE_INT_ARGB);
+			imgOri = new BufferedImage(4, 4, BufferedImage.TYPE_INT_ARGB);
 			Graphics2D g2 = ((BufferedImage) img).createGraphics();
 			g2.setColor(Color.BLUE);
 			g2.fillRect(4, 4, 1, 1);
 			g2.dispose();
+			this.img = new BufferedImage(this.imgOri.getWidth(null), this.imgOri.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 		}
 		
 	}
@@ -96,14 +100,29 @@ public class Ant extends AbstractInsect {
 	public Image getImage() {
 		return img;
 	}
-
+	
+	private void rotateImg() {
+		
+		Graphics2D g2 = ((BufferedImage) img).createGraphics();
+		//clear the surface
+		g2.setBackground(new Color (1,1,1,1)); //transparency backColor
+		g2.clearRect(0, 0, img.getWidth(null), img.getHeight(null));
+		//do the rotation
+		AffineTransform tx = new AffineTransform();
+		tx.rotate(Math.toRadians(this.azimuthDegrees)/2,this.imgOri.getWidth(null)/2, this.imgOri.getHeight(null)/2 );
+	    g2.setTransform(tx);
+	    g2.drawImage(imgOri, tx, null);		
+		g2.dispose();		
+	}
 
 	private void turnLeft(int degrees){
 		this.azimuthDegrees = (this.azimuthDegrees - degrees) % 360;
+		this.rotateImg();
 	}
 	
 	private void turnRight(int degrees){
 		this.azimuthDegrees = (this.azimuthDegrees + degrees) % 360;
+		this.rotateImg();
 	}
 	
 	private void goHead(){
